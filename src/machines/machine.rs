@@ -1,14 +1,22 @@
 use crate::beans::bean::{Bean, BeanRoast};
 use crate::beans::coffee_type::Coffee;
 use chrono::Local;
-use serde::{Deserialize, Serialize};
 use http::{Request, Response, Uri};
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub enum IP {
     V4(u8, u8, u8, u8),
     V6(String),
+}
+
+impl IP {
+    pub fn to_string(&self) -> String {
+        match self {
+            IP::V4(a, b, c, d) => format!("{a}.{b}.{c}.{d}"),
+            IP::V6(s) => s.clone(),
+        }
+    }
 }
 
 // Simple machine with ip, and roasts
@@ -27,8 +35,16 @@ impl Machine {
         unimplemented!()
     }
 
-    pub fn get_stats(&self) {//-> http::Result<Response<()>> {
-       // Request::builder().uri(Uri::);
+    pub fn get_stats(&self) -> http::Result<Response<()>> {
+        Request::builder()
+            .uri(
+                format!("{}:{}/", self.machine_ip.to_string(), self.port)
+                    .as_str()
+                    .parse::<Uri>()
+                    .unwrap(),
+            )
+            .body(())
+            .unwrap();
         unimplemented!()
     }
 

@@ -56,11 +56,11 @@ fn main() {
     );
      */
     match parse_args(cli_args!()) {
-        Ok(_) => { }
+        Ok(_) => {}
         Err(e) => {
             println!("Argument parse error: {e}");
             std::process::exit(69);
-        },
+        }
     };
 }
 

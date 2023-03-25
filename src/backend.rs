@@ -9,7 +9,9 @@ pub struct MeanBackend {
 
 impl MeanBackend {
     pub fn new(machines: Vec<Machine>, coffees: Vec<Coffee>) -> MeanBackend {
-        machines.iter().for_each(|m| m.get_stats());
+        machines.iter().for_each(|m| {
+            let _ = m.get_stats();
+        });
         MeanBackend { machines, coffees }
     }
 }
