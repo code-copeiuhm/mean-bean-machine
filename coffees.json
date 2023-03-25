@@ -1,0 +1,5 @@
+[
+  {"name": "Black Coffee", "water_ratio": 15, "milk_ratio": null},
+  {"name": "Cafe Latte", "water_ratio":2 ,"milk_ratio":5},
+  {"name": "Espresso", "water_ratio": 2, "milk_ratio":null}
+]

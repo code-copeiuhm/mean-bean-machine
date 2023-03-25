@@ -1,6 +1,5 @@
 use crate::beans::serialization::*;
 use chrono::naive::NaiveDate;
-use chrono::offset::Local;
 use serde::{Deserialize, Serialize};
 
 pub type Temperature = u8;
