@@ -19,12 +19,19 @@ impl MeanBackend {
     }
 
     pub fn get_data(&self) -> serde_json::Result<String> {
-        serde_json::to_string(&Data { machines: self.machines.iter().map(|m| m.get_dummy()).collect::<Vec<DummyMachine>>(), coffees: self.coffees.clone()})
+        serde_json::to_string(&Data {
+            machines: self
+                .machines
+                .iter()
+                .map(|m| m.get_dummy())
+                .collect::<Vec<DummyMachine>>(),
+            coffees: self.coffees.clone(),
+        })
     }
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
 struct Data {
     machines: Vec<DummyMachine>,
-    coffees: Vec<Coffee>
+    coffees: Vec<Coffee>,
 }

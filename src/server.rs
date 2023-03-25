@@ -50,10 +50,8 @@ async fn test() {
 
 #[rocket::main]
 pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    //m.get_stats().await?;
     let conf = crate::parse_args(cli_args!())?;
-    let backend = MeanBackend::new(vec![Machine::new()], conf.1).await?;
-    println!("{:?}", backend.get_data()?);
+    let backend = MeanBackend::new(conf.0, conf.1).await?;
 
     let _rocket = rocket::build()
         .mount("/", FileServer::from("src/coffee-girl/public"))

@@ -25,16 +25,14 @@ fn main() {
 
 fn parse_args(args: clap::ArgMatches) -> Result<server::Conf, Box<dyn Error>> {
     // Servers/Coffee machines
-    let mut s = String::new();
+    let (mut m, mut c) = (String::new(), String::new());
 
-    //TODO: Fill file
-    //File::open(args.get_one::<PathBuf>("config").unwrap())?.read_to_string(&mut s)?;
-    //let machines = serde_json::from_str::<Vec<Machine>>(s.as_str())?;
-    let machines = vec![];//serde_json::from_str::<Vec<Machine>>(s.as_str())?;
+    File::open(args.get_one::<PathBuf>("config").unwrap())?.read_to_string(&mut m)?;
+    let machines = serde_json::from_str::<Vec<Machine>>(m.as_str())?;
 
     // Coffee
-    File::open(args.get_one::<PathBuf>("coffees").unwrap())?.read_to_string(&mut s)?;
-    let coffees = serde_json::from_str::<Vec<Coffee>>(s.as_str())?;
+    File::open(args.get_one::<PathBuf>("coffees").unwrap())?.read_to_string(&mut c)?;
+    let coffees = serde_json::from_str::<Vec<Coffee>>(c.as_str())?;
 
     Ok((machines, coffees))
 }

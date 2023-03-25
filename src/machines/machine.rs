@@ -29,6 +29,7 @@ impl std::fmt::Display for IP {
 // Simple machine with ip, and roasts
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct Machine {
+    #[serde(rename = "machine-ip")]
     machine_ip: IP,
     port: u16,
     beans: Vec<Bean>,
@@ -104,7 +105,8 @@ impl Machine {
     pub fn get_dummy(&self) -> DummyMachine {
         DummyMachine::new(
             self.physical_location.clone(),
-            self.beans.clone(), self.has_milk,
+            self.beans.clone(),
+            self.has_milk,
         )
     }
 
@@ -146,7 +148,8 @@ impl DummyMachine {
     fn new(physical_location: String, beans: Vec<Bean>, has_milk: bool) -> DummyMachine {
         DummyMachine {
             physical_location,
-            beans, has_milk,
+            beans,
+            has_milk,
         }
     }
 }

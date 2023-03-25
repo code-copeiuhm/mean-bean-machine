@@ -1,0 +1,8 @@
+[
+  {"machine-ip": {"V4":[127,0,0,1]}, "port": 5000, "physical_location":"Entre", "beans":[
+      {"roast":{"Dark":95},"roast_date":"2023-03-25","source":"Vodskov"},
+      {"roast":{"Light":91},"roast_date":"2023-03-25","source":"Vodskov"},
+      {"roast":{"Medium":93},"roast_date":"2023-03-25","source":"Vodskov"}
+    ],
+    "pots": 1, "has_milk": true}
+]
