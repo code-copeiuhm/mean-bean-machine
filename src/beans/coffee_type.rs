@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-//use crate::beans::serialization::*;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Coffee {

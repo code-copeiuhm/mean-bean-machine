@@ -1,4 +1,4 @@
-use crate::beans::bean::BeanRoast;
+use crate::beans::bean::Bean;
 use crate::beans::coffee_type::Coffee;
 use serde::{Deserialize, Serialize};
 
@@ -13,11 +13,12 @@ pub enum IP {
 pub struct Machine {
     //TODO: Connect to machine and prompt for info needed
     machine_ip: IP,
-    roasts: Vec<BeanRoast>,
+    roasts: Vec<Bean>,
 }
 
 impl Machine {
     fn make_coffee(&self, total_amount: u8, coffee: Coffee) {
         //Amount = water_amount(total_amount)
+        unimplemented!()
     }
 }
