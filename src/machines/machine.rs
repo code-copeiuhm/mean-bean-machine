@@ -34,6 +34,7 @@ pub struct Machine {
     beans: Vec<Bean>,
     physical_location: String,
     pots: u8,
+    has_milk: bool,
 }
 
 impl Machine {
@@ -100,12 +101,11 @@ impl Machine {
         Ok(())
     }
 
-    pub fn client_data(&self) -> String {
-        serde_json::to_string(&DummyMachine::new(
+    pub fn get_dummy(&self) -> DummyMachine {
+        DummyMachine::new(
             self.physical_location.clone(),
-            self.beans.clone(),
-        ))
-        .unwrap()
+            self.beans.clone(), self.has_milk,
+        )
     }
 
     pub fn new() -> Machine {
@@ -131,20 +131,22 @@ impl Machine {
             ],
             physical_location: "Entre".to_string(),
             pots: 1,
+            has_milk: true,
         }
     }
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
-struct DummyMachine {
+pub struct DummyMachine {
     physical_location: String,
     beans: Vec<Bean>,
+    has_milk: bool,
 }
 impl DummyMachine {
-    fn new(physical_location: String, beans: Vec<Bean>) -> DummyMachine {
+    fn new(physical_location: String, beans: Vec<Bean>, has_milk: bool) -> DummyMachine {
         DummyMachine {
             physical_location,
-            beans,
+            beans, has_milk,
         }
     }
 }

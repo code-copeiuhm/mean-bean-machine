@@ -3,7 +3,6 @@ use mean_bean_machine::backend::MeanBackend;
 use mean_bean_machine::beans::coffee_type::Coffee;
 use mean_bean_machine::machines::machine::Machine;
 use rocket::fs::FileServer;
-use rocket::routes;
 use std::path::PathBuf;
 
 pub type Conf = (Vec<Machine>, Vec<Coffee>);
@@ -53,7 +52,8 @@ async fn test() {
 pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //m.get_stats().await?;
     let conf = crate::parse_args(cli_args!())?;
-    let backend = MeanBackend::new(conf.0, conf.1).await?;
+    let backend = MeanBackend::new(vec![Machine::new()], conf.1).await?;
+    println!("{:?}", backend.get_data()?);
 
     let _rocket = rocket::build()
         .mount("/", FileServer::from("src/coffee-girl/public"))
