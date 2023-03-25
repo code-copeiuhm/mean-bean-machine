@@ -34,6 +34,9 @@ macro_rules! cli_args {
 }
 
 fn main() {
+    //let m = Machine::new();
+    //println!("Machine: {:?}", m.client_data());
+
     /* Test shit
     let c = vec![
         Coffee::new("Black Coffee".to_string(), 15, None, None),
@@ -52,14 +55,22 @@ fn main() {
         serde_json::from_str::<Bean>(serde_json::to_string(&b).unwrap().as_str())
     );
      */
-    parse_args(cli_args!());
+    match parse_args(cli_args!()) {
+        Ok(_) => { }
+        Err(e) => {
+            println!("Argument parse error: {e}");
+            std::process::exit(69);
+        },
+    };
 }
 
 fn parse_args(args: clap::ArgMatches) -> Result<(), Box<dyn Error>> {
     // Servers/Coffee machines
     let mut s = String::new();
-    File::open(args.get_one::<PathBuf>("config").unwrap())?.read_to_string(&mut s)?;
-    let machines = serde_json::from_str::<Vec<Machine>>(s.as_str())?;
+
+    //TODO: Fill file
+    //File::open(args.get_one::<PathBuf>("config").unwrap())?.read_to_string(&mut s)?;
+    //let machines = serde_json::from_str::<Vec<Machine>>(s.as_str())?;
 
     // Coffee
     File::open(args.get_one::<PathBuf>("coffees").unwrap())?.read_to_string(&mut s)?;

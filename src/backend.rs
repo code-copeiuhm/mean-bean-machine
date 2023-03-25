@@ -1,5 +1,6 @@
 use crate::beans::coffee_type::Coffee;
 use crate::machines::machine::Machine;
+use http::{Request, Response};
 
 pub struct MeanBackend {
     machines: Vec<Machine>,
