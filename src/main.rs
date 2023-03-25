@@ -8,6 +8,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
+
 #[macro_use] extern crate rocket;
 
 mod server;
@@ -36,9 +37,9 @@ macro_rules! cli_args {
     }
 }
 
+
 fn main() {
-    //let m = Machine::new();
-    //println!("Machine: {:?}", m.client_data());
+
 
     /* Test shit
     let c = vec![
