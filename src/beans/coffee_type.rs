@@ -3,10 +3,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub enum MilkType {
     Cream,
+    #[serde(rename = "Half-and-half")]
     HalfAndHalf,
+    #[serde(rename = "Whole-milk")]
     Whole,
+    #[serde(rename = "Part-Skim")]
     PartSkim,
     Skim,
+    #[serde(rename = "Non-Dairy")]
     NonDairy,
 }
 

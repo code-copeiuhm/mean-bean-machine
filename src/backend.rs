@@ -1,6 +1,5 @@
 use crate::beans::coffee_type::Coffee;
 use crate::machines::machine::Machine;
-use http::{Request, Response};
 
 pub struct MeanBackend {
     machines: Vec<Machine>,
@@ -8,10 +7,13 @@ pub struct MeanBackend {
 }
 
 impl MeanBackend {
-    pub fn new(machines: Vec<Machine>, coffees: Vec<Coffee>) -> MeanBackend {
+    pub async fn new(
+        machines: Vec<Machine>,
+        coffees: Vec<Coffee>,
+    ) -> Result<MeanBackend, Box<dyn std::error::Error>> {
         machines.iter().for_each(|m| {
-            let _ = m.get_stats();
+            let _ = async { m.get_stats().await };
         });
-        MeanBackend { machines, coffees }
+        Ok(MeanBackend { machines, coffees })
     }
 }
