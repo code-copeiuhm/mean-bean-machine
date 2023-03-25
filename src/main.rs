@@ -1,4 +1,8 @@
+use chrono::Local;
 use clap::{arg, value_parser, Arg, Command};
+use mean_bean_machine::beans::bean::Bean;
+use mean_bean_machine::beans::{bean::BeanRoast, serialization::encode_roast};
+use serde_json::Result;
 use std::path::PathBuf;
 
 //TODO: args (server locations)
@@ -18,6 +22,16 @@ macro_rules! cli_args {
 }
 
 fn main() {
+    let b = Bean::new(
+        BeanRoast::Light(79),
+        Local::now().date_naive(),
+        "gamer".to_string(),
+    );
+
+    println!(
+        "{:?}",
+        serde_json::from_str::<Bean>(serde_json::to_string(&b).unwrap().as_str())
+    );
     parse_args(cli_args!());
 }
 
