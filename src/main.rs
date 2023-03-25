@@ -8,6 +8,9 @@ use std::error::Error;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
+#[macro_use] extern crate rocket;
+
+mod server;
 
 macro_rules! cli_args {
     () => {
@@ -62,6 +65,7 @@ fn main() {
             std::process::exit(69);
         },
     };
+    server::main();
 }
 
 fn parse_args(args: clap::ArgMatches) -> Result<(), Box<dyn Error>> {
