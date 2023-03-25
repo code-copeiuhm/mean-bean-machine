@@ -13,12 +13,15 @@ pub enum IP {
 pub struct Machine {
     //TODO: Connect to machine and prompt for info needed
     machine_ip: IP,
-    roasts: Vec<Bean>,
+    port: u8,
+    beans: Vec<Bean>,
 }
 
 impl Machine {
-    fn make_coffee(&self, total_amount: u8, coffee: Coffee) {
+    pub fn make_coffee(&self, total_amount: u8, coffee: Coffee) {
         //Amount = water_amount(total_amount)
         unimplemented!()
     }
+
+    pub fn get_stats(&self) {}
 }

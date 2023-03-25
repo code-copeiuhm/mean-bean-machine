@@ -1,22 +1,43 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
+pub enum MilkType {
+    Cream,
+    HalfAndHalf,
+    Whole,
+    PartSkim,
+    Skim,
+    NonDairy,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Coffee {
     name: String,
     water_ratio: u8,
     milk_ratio: Option<u8>,
+    milk_type: Option<MilkType>,
 }
 
 impl Coffee {
-    pub fn new(name: String, water_ratio: u8, milk_ratio: Option<u8>) -> Coffee {
+    pub fn new(
+        name: String,
+        water_ratio: u8,
+        milk_ratio: Option<u8>,
+        milk_type: Option<MilkType>,
+    ) -> Coffee {
+        assert_eq!(milk_ratio.is_some(), milk_type.is_some());
         Coffee {
             name,
             water_ratio,
             milk_ratio,
+            milk_type,
         }
     }
     fn water_ratio(&self) -> u8 {
         self.water_ratio
+    }
+    fn milk_type(&self) -> &Option<MilkType> {
+        &self.milk_type
     }
     fn milk_ratio(&self) -> Option<u8> {
         self.milk_ratio

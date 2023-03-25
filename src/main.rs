@@ -1,19 +1,14 @@
-use chrono::Local;
-use clap::{arg, value_parser, Arg, Command};
-use mean_bean_machine::beans::bean::Bean;
-use mean_bean_machine::beans::bean::BeanRoast;
+use clap::{arg, value_parser, Command};
+
 use mean_bean_machine::beans::coffee_type::Coffee;
 use mean_bean_machine::machines::machine::Machine;
-use std::collections::HashMap;
+
+use mean_bean_machine::constants;
 use std::error::Error;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
 
-static DEFAULT_COFFEE: &str = "./coffees.json";
-static DEFAULT_MACHINE: &str = "./machines.json";
-
-//TODO: args (server locations)
 macro_rules! cli_args {
     () => {
         Command::new("MeanBeanMachine").version("0.1").author("t-lohse").about("Beanis")
@@ -21,7 +16,7 @@ macro_rules! cli_args {
             arg!(
                 -c --config <FILE> "Specify the config file containing coffee-machines"
             )
-            .default_value(DEFAULT_MACHINE)
+            .default_value(constants::DEFAULT_MACHINE)
             .required(false)
             .value_parser(value_parser!(PathBuf)),
         )
@@ -29,7 +24,7 @@ macro_rules! cli_args {
             arg!(
                 -t --coffees <FILE> "Specify the config file containing coffee types"
             )
-            .default_value(DEFAULT_COFFEE)
+            .default_value(constants::DEFAULT_COFFEE)
             .required(false)
             .value_parser(value_parser!(PathBuf)),
         )
@@ -39,6 +34,24 @@ macro_rules! cli_args {
 }
 
 fn main() {
+    /* Test shit
+    let c = vec![
+        Coffee::new("Black Coffee".to_string(), 15, None, None),
+        Coffee::new("Cafe Latte".to_string(), 2, Some(5), Some(MilkType::Skim)),
+        Coffee::new("Espresso".to_string(), 2, None, None),
+    ];
+    println!("{:?}", serde_json::to_string(&c).unwrap().as_str());
+    let b = Bean::new(
+        BeanRoast::Light(79),
+        Local::now().date_naive(),
+        "gamer".to_string(),
+    );
+
+    println!(
+        "{:?}",
+        serde_json::from_str::<Bean>(serde_json::to_string(&b).unwrap().as_str())
+    );
+     */
     parse_args(cli_args!());
 }
 
