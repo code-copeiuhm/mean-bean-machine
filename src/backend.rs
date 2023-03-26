@@ -1,7 +1,5 @@
 use crate::beans::coffee_type::Coffee;
 use crate::machines::machine::{DummyMachine, Machine};
-use rocket::data::Outcome;
-use rocket::Request;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone)]
@@ -29,12 +27,20 @@ impl MeanBackend {
                 .map(|m| m.get_dummy())
                 .collect::<Vec<DummyMachine>>(),
             coffees: self.coffees.clone(),
-        }).unwrap()
+        })
+        .unwrap()
     }
 
-    //TODO: Machine
-    pub async fn make_coffee(&self, m: Machine, c: Coffee) -> Result<(), Box<dyn std::error::Error>> {
-        self.machines.iter().find(|_m| **_m == m).unwrap().make_coffee(10, &self.coffees[0], &self.machines[0].beans[0]).await?;
+    //TODO: Beans should be sent as well, currently only takes the first
+    //TODO: Total amount from user
+    //TODO: Should be indices for machine and coffee
+    pub async fn make_coffee(
+        &self,
+        m: Machine,
+        c: Coffee,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let ma = self.machines.iter().find(|_m| **_m == m).unwrap();
+        ma.make_coffee(10, &c, &ma.beans[0]).await?;
         Ok(())
     }
 }

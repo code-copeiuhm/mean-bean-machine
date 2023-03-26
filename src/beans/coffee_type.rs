@@ -37,13 +37,13 @@ impl Coffee {
             milk_type,
         }
     }
-    fn water_ratio(&self) -> u8 {
+    pub fn water_ratio(&self) -> u8 {
         self.water_ratio
     }
-    fn milk_type(&self) -> &Option<MilkType> {
+    pub fn milk_type(&self) -> &Option<MilkType> {
         &self.milk_type
     }
-    fn milk_ratio(&self) -> Option<u8> {
+    pub fn milk_ratio(&self) -> Option<u8> {
         self.milk_ratio
     }
     pub fn water_amount(&self, total_amount: u8) -> u8 {

@@ -1,17 +1,14 @@
 use crate::beans::bean::{Bean, BeanRoast};
+use crate::beans::coffee_type::Coffee;
 use chrono::Local;
 use http::uri::InvalidUri;
+use http::Method;
 use hyper::{body::HttpBody, Client};
+use rocket::http::hyper as rhyper;
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
-use std::str::FromStr;
-use std::task;
-use std::thread::sleep;
 use std::time::Duration;
-use http::{Extensions, Method};
 use IP::{V4, V6};
-use crate::beans::coffee_type::Coffee;
-use rocket::http::hyper as rhyper;
 #[derive(Clone, Deserialize, Serialize, Debug, PartialEq, Eq)]
 pub enum IP {
     V4(u8, u8, u8, u8),
@@ -59,7 +56,7 @@ impl Machine {
         &self,
         total_amount: u8,
         coffee: &Coffee,
-        bean: &Bean
+        bean: &Bean,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let po = Query::new(0, 10, 100, 30);
         println!("{}", serde_json::to_string(&po)?);
@@ -67,17 +64,21 @@ impl Machine {
             .method(Method::from_bytes("BREW".as_bytes()).unwrap())
             .uri(self.get_addr(Some("pot-0"))?)
             .header("content-type", "application/coffee-pot-command")
-            .body(rhyper::Body::from(
-                format!(r#"{{"canister": 0, "beanAmount": {}, "temp": {}, "mil":{}}}"#, total_amount / (coffee.milk_amount(total_amount).unwrap() + coffee.water_amount(total_amount)), bean.optimal_temperature(), coffee.water_amount(total_amount)),
-            ))?;
+            .body(rhyper::Body::from(format!(
+                r#"{{"canister": 0, "beanAmount": {}, "temp": {}, "mil":{}}}"#,
+                total_amount
+                    / (coffee.milk_ratio().unwrap_or(0)
+                        + coffee.water_ratio()),
+                bean.optimal_temperature(),
+                coffee.water_amount(total_amount)
+            )))?;
         println!("{:?}", req.body());
         let client = Client::new();
-
 
         // POST it...
         let mut resp = client.request(req).await?;
 
-        if (coffee.contains_milk()) {
+        if coffee.contains_milk() {
             async_std::task::sleep(Duration::from_secs(5)).await;
 
             let req = rhyper::Request::builder()
@@ -87,8 +88,7 @@ impl Machine {
             println!("{:?}", req.body());
             let client = Client::new();
 
-
-             client.request(req).await?;
+            client.request(req).await?;
         }
 
         println!("Response: {}", resp.status());

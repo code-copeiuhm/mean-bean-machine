@@ -4,7 +4,6 @@ use mean_bean_machine::machines::machine::Machine;
 use mean_bean_machine::constants;
 use std::error::Error;
 use std::fs::File;
-use std::future::Future;
 use std::io::Read;
 use std::path::PathBuf;
 

@@ -3,10 +3,9 @@ use mean_bean_machine::backend::MeanBackend;
 use mean_bean_machine::beans::coffee_type::Coffee;
 use mean_bean_machine::machines::machine::Machine;
 use rocket::fs::FileServer;
+use rocket::State;
 use std::path::PathBuf;
 use std::sync::Arc;
-use rocket::State;
-use serde::de::Unexpected::Str;
 
 pub type Conf = (Vec<Machine>, Vec<Coffee>);
 
@@ -34,18 +33,10 @@ macro_rules! cli_args {
     }
 }
 
-#[get("/world")]
-fn world() -> &'static str {
-    //send html side
-    "Hello, world!"
-}
-
-
 #[get("/data")]
 fn data(state: &State<Arc<MeanBackend>>) -> String {
     state.get_data()
 }
-
 
 #[get("/brew?<coffee_machines>&<coffees>", format = "json")]
 fn brew(state: &State<Arc<MeanBackend>>, coffee_machines: String, coffees: String) -> String {
@@ -53,10 +44,9 @@ fn brew(state: &State<Arc<MeanBackend>>, coffee_machines: String, coffees: Strin
 
     let m: Machine = serde_json::from_str(coffee_machines.as_str()).unwrap();
     let c: Coffee = serde_json::from_str(coffees.as_str()).unwrap();
-    
+    let _ = state.make_coffee(m, c);
     String::new()
 }
-
 
 #[rocket::main]
 pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -73,4 +63,3 @@ pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
-
