@@ -66,9 +66,7 @@ impl Machine {
             .header("content-type", "application/coffee-pot-command")
             .body(rhyper::Body::from(format!(
                 r#"{{"canister": 0, "beanAmount": {}, "temp": {}, "mil":{}}}"#,
-                total_amount
-                    / (coffee.milk_ratio().unwrap_or(0)
-                        + coffee.water_ratio()),
+                total_amount / (coffee.milk_ratio().unwrap_or(0) + coffee.water_ratio()),
                 bean.optimal_temperature(),
                 coffee.water_amount(total_amount)
             )))?;
