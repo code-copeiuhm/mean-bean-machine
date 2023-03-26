@@ -1,7 +1,10 @@
 use crate::beans::coffee_type::Coffee;
 use crate::machines::machine::{DummyMachine, Machine};
+use rocket::data::Outcome;
+use rocket::Request;
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone)]
 pub struct MeanBackend {
     machines: Vec<Machine>,
     coffees: Vec<Coffee>,
@@ -27,6 +30,11 @@ impl MeanBackend {
                 .collect::<Vec<DummyMachine>>(),
             coffees: self.coffees.clone(),
         })
+    }
+
+    //TODO: Machine
+    pub async fn make_coffee(&self) -> Result<(), Box<dyn std::error::Error>> {
+        Ok(())
     }
 }
 

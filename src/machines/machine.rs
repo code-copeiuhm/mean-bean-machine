@@ -62,7 +62,7 @@ impl Machine {
             .method(rhyper::Method::POST)
             .uri(self.get_addr(Some("pot-0"))?)
             .header("content-type", "application/coffee-pot-command")
-            .header("content-type", "application/coffee-pot-command")
+            //.header("content-type", "application/coffee-pot-command")
             .body(rhyper::Body::from(
                 //serde_json::to_string(&po)?.as_bytes()
                 r#"{"canister": 0, "beanAmount": 10, "temp": 100, "mil":30}"#,

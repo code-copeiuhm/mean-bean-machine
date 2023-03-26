@@ -4,6 +4,10 @@ use mean_bean_machine::beans::coffee_type::Coffee;
 use mean_bean_machine::machines::machine::Machine;
 use rocket::fs::FileServer;
 use std::path::PathBuf;
+use std::rc::Rc;
+use std::sync::Arc;
+use rocket::State;
+use rocket::response::content;
 
 pub type Conf = (Vec<Machine>, Vec<Coffee>);
 
@@ -36,27 +40,23 @@ fn world() -> &'static str {
     //send html side
     "Hello, world!"
 }
-/*
-async fn test() {
-    //println!("gamer2");
-    //let m = mean_bean_machine::machines::machine::Machine::new();
-    //println!("Machine: {:?}", m.client_data());
-    //    let _ =
-    //println!("p: {:?}", p);
-    //let b = m.make_coffee(100).await;
-    //println!("b: {:?}", b);
-}
- */
 
 #[rocket::main]
 pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let conf = crate::parse_args(cli_args!())?;
     let backend = MeanBackend::new(conf.0, conf.1).await?;
 
-    let _rocket = rocket::build()
+    let _ = rocket::build()
         .mount("/", FileServer::from("src/coffee-girl/public"))
+        .manage(Arc::new(backend))
+        //.mount("/data", )
         .launch()
         .await?;
 
     Ok(())
+}
+
+#[get("/data")]
+fn data(state: &State<Arc<MeanBackend>>) -> String {
+    state.get_data().unwrap()
 }
