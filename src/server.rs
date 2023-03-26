@@ -4,10 +4,8 @@ use mean_bean_machine::beans::coffee_type::Coffee;
 use mean_bean_machine::machines::machine::Machine;
 use rocket::fs::FileServer;
 use std::path::PathBuf;
-use std::rc::Rc;
 use std::sync::Arc;
 use rocket::State;
-use rocket::response::content;
 
 pub type Conf = (Vec<Machine>, Vec<Coffee>);
 
@@ -35,11 +33,18 @@ macro_rules! cli_args {
     }
 }
 
-#[get("/")]
+#[get("/world")]
 fn world() -> &'static str {
     //send html side
     "Hello, world!"
 }
+
+
+#[get("/data")]
+fn data(state: &State<Arc<MeanBackend>>) -> String {
+    state.get_data().unwrap()
+}
+
 
 #[rocket::main]
 pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -47,16 +52,12 @@ pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let backend = MeanBackend::new(conf.0, conf.1).await?;
 
     let _ = rocket::build()
-        .mount("/", FileServer::from("src/coffee-girl/public"))
         .manage(Arc::new(backend))
-        //.mount("/data", )
+        .mount("/", FileServer::from("src/coffee-girl/public"))
+        .mount("/", routes![data])
         .launch()
         .await?;
 
     Ok(())
 }
 
-#[get("/data")]
-fn data(state: &State<Arc<MeanBackend>>) -> String {
-    state.get_data().unwrap()
-}
