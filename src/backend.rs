@@ -21,7 +21,7 @@ impl MeanBackend {
         Ok(MeanBackend { machines, coffees })
     }
 
-    pub fn get_data(&self) -> serde_json::Result<String> {
+    pub fn get_data(&self) -> String {
         serde_json::to_string(&Data {
             machines: self
                 .machines
@@ -29,11 +29,12 @@ impl MeanBackend {
                 .map(|m| m.get_dummy())
                 .collect::<Vec<DummyMachine>>(),
             coffees: self.coffees.clone(),
-        })
+        }).unwrap()
     }
 
     //TODO: Machine
     pub async fn make_coffee(&self) -> Result<(), Box<dyn std::error::Error>> {
+        
         Ok(())
     }
 }

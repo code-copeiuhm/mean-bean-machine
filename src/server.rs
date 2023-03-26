@@ -6,6 +6,7 @@ use rocket::fs::FileServer;
 use std::path::PathBuf;
 use std::sync::Arc;
 use rocket::State;
+use serde::de::Unexpected::Str;
 
 pub type Conf = (Vec<Machine>, Vec<Coffee>);
 
@@ -42,7 +43,16 @@ fn world() -> &'static str {
 
 #[get("/data")]
 fn data(state: &State<Arc<MeanBackend>>) -> String {
-    state.get_data().unwrap()
+    state.get_data()
+}
+
+
+#[get("/brew?<coffee_machines>&<coffees>", format = "json")]
+fn brew(state: &State<Arc<MeanBackend>>, coffee_machines: String, coffees: String) -> String {
+    let m: Machine = serde_json::from_str(coffee_machines.as_str()).unwrap();
+    let c: Coffee = serde_json::from_str(coffees.as_str()).unwrap();
+
+    String::new()
 }
 
 
@@ -55,6 +65,7 @@ pub(crate) async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .manage(Arc::new(backend))
         .mount("/", FileServer::from("src/coffee-girl/public"))
         .mount("/", routes![data])
+        .mount("/", routes![brew])
         .launch()
         .await?;
 
