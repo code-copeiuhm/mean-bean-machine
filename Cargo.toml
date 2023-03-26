@@ -13,3 +13,4 @@ serde = { version = "1.0", features = ["derive"] }
 rocket = {version = "=0.5.0-rc.3", features = ["json"]}
 http = "0.2.9"
 hyper = { version = "0.14", features = ["full"] }
+async-std = "1.12.0"

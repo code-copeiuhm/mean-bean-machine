@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 pub type Temperature = u8;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum BeanRoast {
     Light(Temperature),
     Medium(Temperature),
@@ -19,7 +19,7 @@ impl BeanRoast {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Eq)]
 pub struct Bean {
     roast: BeanRoast,
     #[serde(deserialize_with = "decode_date", serialize_with = "encode_date")]

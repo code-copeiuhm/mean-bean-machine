@@ -49,9 +49,11 @@ fn data(state: &State<Arc<MeanBackend>>) -> String {
 
 #[get("/brew?<coffee_machines>&<coffees>", format = "json")]
 fn brew(state: &State<Arc<MeanBackend>>, coffee_machines: String, coffees: String) -> String {
+    println!("{}, {}", coffee_machines, coffees);
+
     let m: Machine = serde_json::from_str(coffee_machines.as_str()).unwrap();
     let c: Coffee = serde_json::from_str(coffees.as_str()).unwrap();
-
+    
     String::new()
 }
 

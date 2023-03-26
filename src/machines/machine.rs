@@ -2,12 +2,17 @@ use crate::beans::bean::{Bean, BeanRoast};
 use chrono::Local;
 use http::uri::InvalidUri;
 use hyper::{body::HttpBody, Client};
-use rocket::http::hyper as rhyper;
 use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
+use std::str::FromStr;
+use std::task;
+use std::thread::sleep;
+use std::time::Duration;
+use http::{Extensions, Method};
 use IP::{V4, V6};
-
-#[derive(Clone, Deserialize, Serialize, Debug)]
+use crate::beans::coffee_type::Coffee;
+use rocket::http::hyper as rhyper;
+#[derive(Clone, Deserialize, Serialize, Debug, PartialEq, Eq)]
 pub enum IP {
     V4(u8, u8, u8, u8),
     V6(String),
@@ -27,12 +32,12 @@ impl std::fmt::Display for IP {
 }
 
 // Simple machine with ip, and roasts
-#[derive(Clone, Deserialize, Serialize, Debug)]
+#[derive(Clone, Deserialize, Serialize, Debug, PartialEq, Eq)]
 pub struct Machine {
     #[serde(rename = "machine-ip")]
     machine_ip: IP,
     port: u16,
-    beans: Vec<Bean>,
+    pub beans: Vec<Bean>,
     physical_location: String,
     pots: u8,
     has_milk: bool,
@@ -53,25 +58,38 @@ impl Machine {
         //TODO: write
         &self,
         total_amount: u8,
-        //coffee: &Coffee,
-        //bean: &Bean
+        coffee: &Coffee,
+        bean: &Bean
     ) -> Result<(), Box<dyn std::error::Error>> {
         let po = Query::new(0, 10, 100, 30);
         println!("{}", serde_json::to_string(&po)?);
         let req = rhyper::Request::builder()
-            .method(rhyper::Method::POST)
+            .method(Method::from_bytes("BREW".as_bytes()).unwrap())
             .uri(self.get_addr(Some("pot-0"))?)
             .header("content-type", "application/coffee-pot-command")
-            //.header("content-type", "application/coffee-pot-command")
             .body(rhyper::Body::from(
-                //serde_json::to_string(&po)?.as_bytes()
-                r#"{"canister": 0, "beanAmount": 10, "temp": 100, "mil":30}"#,
+                format!(r#"{{"canister": 0, "beanAmount": {}, "temp": {}, "mil":{}}}"#, total_amount / (coffee.milk_amount(total_amount).unwrap() + coffee.water_amount(total_amount)), bean.optimal_temperature(), coffee.water_amount(total_amount)),
             ))?;
         println!("{:?}", req.body());
         let client = Client::new();
 
+
         // POST it...
         let mut resp = client.request(req).await?;
+
+        if (coffee.contains_milk()) {
+            async_std::task::sleep(Duration::from_secs(5)).await;
+
+            let req = rhyper::Request::builder()
+                .method(Method::from_bytes("WHEN".as_bytes()).unwrap())
+                .uri(self.get_addr(Some("pot-0"))?)
+                .body(rhyper::Body::from(""))?;
+            println!("{:?}", req.body());
+            let client = Client::new();
+
+
+             client.request(req).await?;
+        }
 
         println!("Response: {}", resp.status());
         let s = String::from_utf8(resp.body_mut().data().await.unwrap().unwrap().to_vec())?;
