@@ -34,7 +34,8 @@ impl MeanBackend {
 
     //TODO: Machine
     pub async fn make_coffee(&self) -> Result<(), Box<dyn std::error::Error>> {
-        Ok(())
+        self.machines[0].make_coffee(10, &self.coffees[0], &self.machines[0].beans[0]).await?;
+        return Ok(());
     }
 }
 
