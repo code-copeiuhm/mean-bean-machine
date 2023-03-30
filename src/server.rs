@@ -38,14 +38,15 @@ fn data(state: &State<Arc<MeanBackend>>) -> String {
     state.get_data()
 }
 
-#[get("/brew?<coffee_machines>&<coffees>", format = "json")]
-fn brew(state: &State<Arc<MeanBackend>>, coffee_machines: String, coffees: String) -> String {
-    println!("{}, {}", coffee_machines, coffees);
+#[get("/brew")]
+async fn brew(state: &State<Arc<MeanBackend>>) -> String {
+    //println!("{}, {}", coffee_machines, coffees);
 
-    let m: Machine = serde_json::from_str(coffee_machines.as_str()).unwrap();
-    let c: Coffee = serde_json::from_str(coffees.as_str()).unwrap();
-    let _ = state.make_coffee(m, c);
-    String::new()
+    //let m: Machine = serde_json::from_str(coffee_machines.as_str()).unwrap();
+    //let c: Coffee = serde_json::from_str(coffees.as_str()).unwrap();
+    println!("Making coffee");
+    let _ = state.make_coffee().await;
+    String::from("Coffee was made")
 }
 
 #[rocket::main]

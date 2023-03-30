@@ -36,11 +36,21 @@ impl MeanBackend {
     //TODO: Should be indices for machine and coffee
     pub async fn make_coffee(
         &self,
-        m: Machine,
-        c: Coffee,
+        // m: Machine,
+        // c: Coffee,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let ma = self.machines.iter().find(|_m| **_m == m).unwrap();
-        ma.make_coffee(10, &c, &ma.beans[0]).await?;
+        //let ma = self.machines.iter().find(|_m| **_m == m).unwrap();
+        //ma.make_coffee(10, &c, &ma.beans[0]).await?;
+        self.machines[0]
+            .make_coffee(
+                10,
+                self.coffees
+                    .iter()
+                    .find(|c| c.name == "Black Coffee")
+                    .unwrap(),
+                &self.machines[0].beans[0],
+            )
+            .await?;
         Ok(())
     }
 }

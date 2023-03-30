@@ -16,7 +16,7 @@ pub enum MilkType {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Coffee {
-    name: String,
+    pub name: String,
     water_ratio: u8,
     milk_ratio: Option<u8>,
     milk_type: Option<MilkType>,
